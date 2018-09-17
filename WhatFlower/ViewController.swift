@@ -17,11 +17,11 @@ class ViewController: UIViewController , UINavigationControllerDelegate,UIImageP
         super.viewDidLoad()
         imagePicker.delegate = self
         imagePicker.sourceType = .camera
-        imagePicker.allowsEditing = false
+        imagePicker.allowsEditing = true
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let userImagePicker =  info[UIImagePickerControllerOriginalImage] as? UIImage
+        let userImagePicker =  info[UIImagePickerControllerEditedImage] as? UIImage
         imageView.image = userImagePicker
         imagePicker.dismiss(animated: true, completion: nil)
     }
