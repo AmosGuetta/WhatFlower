@@ -34,9 +34,8 @@ class ViewController: UIViewController , UINavigationControllerDelegate,UIImageP
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-// Local variable inserted by Swift 4.2 migrator.
-let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
-
+        // Local variable inserted by Swift 4.2 migrator.
+        let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         if let userImagePicker = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as? UIImage {
             
             guard let ciImage = CIImage(image: userImagePicker) else {
@@ -44,47 +43,42 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
             }
             
             pickedImage = userImagePicker
-            
-            
             detect(flowerImage: ciImage)
         }
         
         imagePicker.dismiss(animated: true, completion: nil)
+    }
     
-}
+    
     
     func detect(flowerImage: CIImage) {
-        
-        
-        
         guard let model = try? VNCoreMLModel(for: FlowerClassifier().model) else {
             fatalError("Can't load model")
         }
-        
         let request = VNCoreMLRequest(model: model) { (request, error) in
             guard let result = request.results?.first as? VNClassificationObservation else {
                 fatalError("Could not complete classfication")
             }
             
             self.navigationItem.title = result.identifier.capitalized
-            
             self.requestInfo(flowerName: result.identifier)
             
         }
         
         let handler = VNImageRequestHandler(ciImage: flowerImage)
-        
         do {
             try handler.perform([request])
         }
         catch {
             print(error)
         }
-        
-        
     }
     
-    
+    @IBAction func cameraTapped(_ sender: Any) {
+        
+        self.present(self.imagePicker, animated: true, completion: nil)
+        
+    }
 
 
 // Helper function inserted by Swift 4.2 migrator.
@@ -95,4 +89,5 @@ fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [U
 // Helper function inserted by Swift 4.2 migrator.
 fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
 	return input.rawValue
+    }
 }
